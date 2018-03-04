@@ -1,0 +1,11 @@
+#node_modules
+node_modules
+
+#keys file -> only for DEVELOPMENT
+./src/server/config/keys.json
+
+#DS_Store
+.DS_Store
+
+#npm debug
+npm-debug.log
