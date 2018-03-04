@@ -2,7 +2,7 @@
 node_modules
 
 #keys file -> only for DEVELOPMENT
-./src/server/config/keys.json
+src/server/config/keys.json
 
 #DS_Store
 .DS_Store
