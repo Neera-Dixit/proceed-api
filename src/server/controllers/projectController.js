@@ -33,9 +33,8 @@ const projectController = {
     };
 
     _Project.create(_payload).exec((err, projectData) => {
-
       if(err || !projectData) {
-        Util.sendResponse(response, "Failed to create Project");
+       return Util.sendResponse(response, "Failed to create Project");
       }
       Util.sendResponse(response, null, projectData);
     })
@@ -53,23 +52,47 @@ const projectController = {
 
     _Project.update(_findQuery).set(_updateQuery).exec((err, projectData) => {
       if(err || !projectData) {
-        Util.sendResponse(response, `Project with ID ${projID} not found`);
+       return Util.sendResponse(response, `Project with ID ${projID} not found`);
       }
       Util.sendResponse(response, null, projectData);
     });
   },
 
   getProjectDetails: (request, response) => {
-    const projID = request.params.id;
+    const { projectID, userID } = request.query;
 
+    if (projectID) {
+      projectController.getProjectDetailsByProjectID(request, response, projectID);
+    } else if(userID) {
+      projectController.getProjectDetailsByUserID(request, response, userID);
+    } else {
+      Util.sendResponse(response, "Project Not Found");
+    }
+  },
+
+  getProjectDetailsByProjectID: (request, response, projectID) => {
     const _query = {
-      _id: projID
+      _id: projectID
     };
     
     const _Project = request.collections(true)['projectdetails'];
     _Project.findOne(_query).exec((err, projectData) => {
       if(err || !projectData) {
-        Util.sendResponse(response, `Project with ID ${projID} not found`);
+        return Util.sendResponse(response, `Project with ID ${projectID} not found`);
+      }
+      Util.sendResponse(response, null, projectData);
+    });
+  },
+
+  getProjectDetailsByUserID: (request, response, userID) => {
+    const _query = {
+      createdBy: userID
+    };
+    
+    const _Project = request.collections(true)['projectdetails'];
+    _Project.findOne(_query).exec((err, projectData) => {
+      if(err || !projectData) {
+        return Util.sendResponse(response, `Project with ID ${projID} not found`);
       }
       Util.sendResponse(response, null, projectData);
     });

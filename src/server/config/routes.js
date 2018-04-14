@@ -62,14 +62,14 @@ const routes = {
     },
 
     {
-      method: 'GET', path: '/api/projectDetails/{id}',
+      method: 'GET', path: '/api/projectDetails',
       config: {
         validate: { 
           headers: Util.requestHeaderValidation()
         },
         handler: projectController.getProjectDetails
       }
-    }
+    } 
 
     // End of Project Routes
   ]
