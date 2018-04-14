@@ -1,22 +1,35 @@
 import Util from '../config/util';
 import emailService from '../services/emailService';
 
+const generateUserID = ({newUserType:prefixID}) => {
+  return Util.generateUniqueID({prefixID});
+};
+
+const generatePassword = ({newUserType:userType}) => {
+  return Util.generatePassword({userType});
+};
+
 const userController = {
 
   createUser: (request, response) => {
-    const { userID, password, emailID } = request.payload;
-    const { userType } = request.query;
-    const _modelName = Util.getModelNameFromUserID(userType);
+    const { parentUserType, newUserType, name, emailID, contactNum } = request.payload;
+    const _modelName = Util.getModelNameFromUserID(newUserType);
     const _User = request.collections(true)[_modelName];
 
     if (_modelName) {
-      Util.encryptData(userType)
+      const _password = generatePassword({newUserType})
+      Util.encryptData(_password)
         .then((hashValue) => {
 
+          const _userID = generateUserID({newUserType});
+
           const _payLoad = {
-            _id: userID,
+            _id: _userID,
             password: hashValue,
-            emailID
+            emailID,
+            contactNum,
+            name,
+            userType: newUserType,
           };
 
           _User.create(_payLoad).exec((error, userData) => {
@@ -27,15 +40,15 @@ const userController = {
                 template: {
                   name: 'registration',
                   data: {
-                    userID,
-                    password
+                    userID: _userID,
+                    password: _password
                   }
                 }
               };
 
               emailService.sendEmail(_payload)
                 .then((status) => {
-                  Util.sendResponse(response, null, userData);
+                  Util.sendResponse(response, null, {message : `User ${_userID} created successfully`});
                 })
                 .catch((err) => Util.sendResponse(response, 'Failed to Send Email to User'))
             } else {

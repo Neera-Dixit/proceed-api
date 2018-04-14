@@ -15,6 +15,7 @@
     "babel-runtime": "^6.26.0",
     "bcrypt": "^1.0.3",
     "dogwater": "^2.3.0",
+    "generate-password": "^1.4.0",
     "hapi": "^16.6.2",
     "hapi-react-views": "10.0.0",
     "inert": "^4.1.0",
@@ -28,6 +29,7 @@
     "react-table": "^6.7.6",
     "sails-mongo": "^0.12.2",
     "sails-postgresql": "^0.11.4",
+    "shortid": "^2.2.8",
     "vision": "^4.1.0",
     "waterline": "^0.12.2"
   },

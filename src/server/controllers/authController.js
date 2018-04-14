@@ -9,12 +9,24 @@ const authController = {
     if (_modelName) {
       const _User = request.collections(true)[_modelName];
       const payload = { _id: userID };
-      _User.findOne(payload).exec((error, userData) => {
+      _User.findOne(payload).exec((error, userData) => { 
         if (!error && userData) {
           Util.compareEncryptedData(password, userData.password)
             .then((status) => {
-              const _jwtToken = Util.generateJWT(request.payload);
-              Util.sendResponse(response, null, { token: _jwtToken });
+              if(status) {
+                const {emailID, contactNum, userType, id } = userData;
+                const _jwtToken = Util.generateJWT(request.payload);
+                Util.sendResponse(response, null, { 
+                  token: _jwtToken,
+                  emailID,
+                  contactNum,
+                  userType,
+                  id
+                });
+              }
+              else {
+                Util.sendResponse(response, 'Invalid User');
+              }
             })
             .catch((err) => Util.sendResponse(response, 'Invalid User'))
         } else {

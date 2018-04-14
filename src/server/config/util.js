@@ -1,6 +1,8 @@
 import Constants from './constants';
 import JWT from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
+import passwordGenerator from 'generate-password';
+import shortid from 'shortid';
 
 const util = {
 
@@ -13,17 +15,41 @@ const util = {
     return response(data).code(200);
   },
 
-  payLoadValidation: (payloadParam) => {
+  requestHeaderValidation: () => {
     return (val, options, next) => {
-      const payload = options.context.payload;
+      const tokenvalue = val.authorization && util.getHeaderAuthTokenValue(val.authorization);
 
+      if(!tokenvalue) {
+        return next(new Error('Missing token'), null);
+      }
+
+      util.validateJWT(tokenvalue)
+        .then(decodedToken => next(null, decodedToken))
+        .catch(err => next(err, null))
+    };
+  },
+
+  getHeaderAuthTokenValue: (authToken) => {
+    return authToken && authToken.slice(7, authToken.length);
+  },
+
+  payLoadValidation: (payloadParam) => {
+    return (payload, options, next) => {
       for (let value of payloadParam) {
         if (!(value in payload)) {
           let err = new Error('Invalid type');
-          next(err, val);
+          return next(err, payload);
         }
       }
-      next(null, val);
+      next(null, payload);
+    };
+  },
+
+  validateQueryParams : () => {
+    return (params, options, next) => {
+      console.log("params ",params);
+      console.log("options ",options);
+      next(null, "data");
     };
   },
 
@@ -46,8 +72,19 @@ const util = {
   },
 
   generateJWT: (payload, expiryTime) => {
-    const JWTtoken = JWT.sign(payload, Constants.JWT_SECRET, { expiresIn: expiryTime || 60 });
+    const JWTtoken = JWT.sign(payload, Constants.JWT_SECRET, { expiresIn: expiryTime || '10d' });
     return JWTtoken;
+  },
+
+  validateJWT: (token) => {
+    return new Promise((resolve, reject) => {
+      JWT.verify(token, Constants.JWT_SECRET, (error, decoded) => {
+        if (error) {
+          reject(error);
+        }
+        resolve(decoded);
+      })
+    });
   },
 
   encryptData: (data) => {
@@ -56,7 +93,21 @@ const util = {
 
   compareEncryptedData: (dataOne, dataTwo) => {
     return bcrypt.compare(dataOne, dataTwo);
+  },
+
+  generatePassword: ({userType}) => {
+    return userType.concat(passwordGenerator.generate({
+      length: 6,
+      numbers: true,
+      symbols: true,
+      uppercase: true
+    }));
+  },
+
+  generateUniqueID: ({prefixID}) => {
+    return prefixID.concat(shortid.generate());
   }
+
 }
 
 export default util;
