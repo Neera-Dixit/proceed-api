@@ -1,5 +1,5 @@
 import React from 'react';
-//  import '../../utils/font.less';
+// import '../../utils/font.less';
 import './login.less';
 import NavPanel from '../common/components/navPanel/navPanel';
 

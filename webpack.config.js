@@ -74,7 +74,7 @@ module.exports = (environment) => {
     output: {
       filename: isDev ? '[name].bundle.js' : '[name].[chunkhash].bundle.js',
       path: path.resolve(__dirname, 'dist'),
-      publicPath: '/',
+      publicPath: '/assets/',
     },
     devtool: isDev ? 'eval-source-map' : 'false',
     resolve: {

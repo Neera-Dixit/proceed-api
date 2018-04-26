@@ -7,6 +7,7 @@
     "preinstall": "npm i webpack -g && npm i webpack-cli && npm i jsdoc -g",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "NODE_ENV=development webpack && node ./bootstrap.js",
+    "webpack:prod": "webpack --config=webpack.config.js --env=production --progress",
     "server": "nodemon ./bootstrap.js",
     "start:dev": "NODE_ENV=development node ./src/server/index.js",
     "start": "npm run webpack:prod && NODE_ENV=production node ./src/server/index.js"
@@ -19,6 +20,7 @@
     "bcrypt": "^1.0.3",
     "dogwater": "^2.3.0",
     "generate-password": "^1.4.0",
+    "handlebars": "^4.0.11",
     "hapi": "^16.6.2",
     "hapi-react-views": "10.0.0",
     "html-webpack-plugin": "^3.2.0",

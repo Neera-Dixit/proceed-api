@@ -1,7 +1,7 @@
 import devMiddleware from 'webpack-dev-middleware';
 import hotMiddleware from 'webpack-hot-middleware';
 import webpack from 'webpack';
-
+import Handlebars from 'handlebars';
 import hapiPlugins from './config/plugin';
 import routes from './config/routes';
 import webpackConfig from '../../webpack.config';
@@ -21,8 +21,6 @@ if (host === 'localhost' || host === 'development') {
   const compiler = webpack(webpackdevConfig);
 
   const _devMiddleware = devMiddleware(compiler, {
-    host,
-    port,
     historyApiFallback: true,
     publicPath: webpackdevConfig.output.publicPath,
     quiet: true  // important for webpack-dashboard to work
@@ -62,13 +60,13 @@ server.register(hapiPlugins, (err) =>  {
   if (err) return console.error(err);
   
     // Add the React-rendering view engine
-    server.views({
+   server.views({
         engines: {
-            jsx: require('hapi-react-views')
+            html: Handlebars
         },
         compileOptions: {},
         relativeTo: __dirname,
-        path: '../views'
+        path: '../../dist/'
     });
 
    // Add main app route

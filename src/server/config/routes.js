@@ -2,6 +2,12 @@ import userController from '../controllers/userController';
 import authController from '../controllers/authController';
 import projectController from '../controllers/projectController';
 import Util from './util';
+import path from 'path';
+
+const homePageHandler = (request, response) => {
+  console.log("entered !!");
+  response.file(path.join(__dirname, '../../assets/template/index.html'));
+};
 
 const customMiddleware = (val, options, next) => {
   console.log("customMiddleware enetered");
@@ -12,8 +18,16 @@ const routes = {
   config: [
 
     // Add main app route
-    { method: 'GET', path: '/{param*}', config: { handler: { view: 'index' } } },
+    { method: 'GET', path: '/{param*}', config: { handler: { view: 'index' } } }, //{ view: 'index' }
 
+    { 
+      method: 'GET', path: '/assets/{param*}', 
+      config: { 
+        handler: { 
+          directory: { path: path.join(__dirname, '../../../dist') } 
+        },
+      },
+    },
     // Start of User Routes
 
     {
