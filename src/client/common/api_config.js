@@ -1,5 +1,23 @@
-const apis = {
-    getUser: 'https://api.github.com/users/Abhilash1993',
-    createUser:'http://cbd4436e.ngrok.io/createUser'
+const api_config = {
+    authenticateUser: {
+      HTTPMethod: 'POST',
+      url: '/api/authenticateUser'
+    },
+    createUser: {
+      HTTPMethod: 'POST',
+      url: '/api/createUser',
+    },
+    createProject: {
+      HTTPMethod: 'POST',
+      url: '/api/createProject'
+    },
+    updateProject: {
+      HTTPMethod: 'PATCH',
+      url: '/api/updateProject/'
+    },  // /projectid
+    projectDetails: {
+      HTTPMethod: 'GET',
+      url: '/api/projectDetails'
+    },
 };
-export default apis;
+export default api_config;

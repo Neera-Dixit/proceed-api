@@ -1,67 +1,59 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import {connect} from 'react-redux';
+import { bindActionCreators } from 'redux';
 // import '../../../utils/font.less';
 import '../../common/common.less';
 import Select from 'react-select';
+import AppUtil from '../../common/appUtils';
+import userActions from '../user_actions';
 
-export default class CreateUser extends React.Component {
+class CreateUser extends Component {
   constructor(props) {
     super(props);
-    this.state={
-      userTypes:[{
-        "label":"Contractor",
-        "value":"contractor"
-      },
-      {
-        "label":"Associate Engineer",
-        "value":"associate_engineer"
-      },
-      {
-        "label":"Associate Executive Engineer",
-        "value":"associate_exec_engineer"
-      },
-      {
-        "label":"Accountant",
-        "value":"account"
-      },
-      {
-        "label":"Executive Engineer",
-        "value":"executive_engineer"
-      }],
-      selectedUser:{}
-    };
   }
 
-  inputChange=(name, event)=> {
-    const stateObj = {};
-      stateObj[name] = event.target.value;
-      this.setState(stateObj);
-  }
-  addUser=()=>{
-    console.log(this.state);
-    const data={
-      "userID":"aee_10",
-      "name":this.state.name,
-      "email":this.state.email,
-      "phone":this.state.phone
-    };
-    this.props.addUser(data);
-  }
+  addUser = (event) => {
+    event.preventDefault();
+    const name = this.name.value;
+    const emailID = this.email.value;
+    const contactNum = this.phone.value;
+    const newUserType = this.userType.value;
 
-  setUserType=(user)=>{
-    // let categoryViews = this.state.categoryViews.slice();
-    // categoryViews[categoryViewIndex].value = category.value;
-    // this.setState({
-    //   categoryViews
-    // });
-    console.log(user);
-    this.setState({
-      selectedUser:user
+    this.props.createuser_Actions.createUser({
+      newUserType,
+      name,
+      emailID,
+      contactNum
     });
   }
 
   render() {
-    const Select = require('react-select');
+    const _props = this.props.userState;
+    const { sublevels } = AppUtil.getSubLevels();
+    const userTypes = sublevels && sublevels.map(user => <option key={user.id} value={user.id}>{user.name}</option>);
+
+    if (_props.userCreation &&  _props.userCreation.status) {
+      return (
+        <div>
+        <button type="button" className="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Create User</button>
+         <div className="modal fade" id="myModal" role="dialog">
+           <div className="modal-dialog"> 
+             <div className="modal-content">
+               <div className="modal-header">
+                 <button type="button" className="close" data-dismiss="modal">&times;</button>
+                 <h4 className="modal-title">User Created Successfully</h4>
+               </div>
+               <div className="modal-footer">
+                 <button type="button" className="btn btn-default" data-dismiss="modal">Close</button>
+               </div>
+             </div>            
+           </div>
+         </div>
+     </div>
+      )
+    }
+
     return (
       <div>
          <button type="button" className="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Create User</button>
@@ -74,30 +66,43 @@ export default class CreateUser extends React.Component {
                   <h4 className="modal-title">User Details</h4>
                 </div>
                 <div className="modal-body">
-                  <form>
+                  <form onSubmit={this.addUser}>
                     <div className="form-group">
                       <label>Name:</label>
-                      <input type="text" className="form-control" id="email" placeholder="Enter name"  onChange={this.inputChange.bind(self, 'name')} name="name"/>
+                      <input type="text" className="form-control" 
+                        id="name"
+                       placeholder="Enter name"  
+                       name="name" 
+                       ref = { name => this.name = name }
+                      required/>
                     </div>
                     <div className="form-group">
                       <label>Email:</label>
-                      <input type="email" className="form-control" id="email" placeholder="Enter email"  onChange={this.inputChange.bind(self, 'email')} name="email"/>
+                      <input type="email" 
+                      className="form-control" 
+                      id="email" 
+                      placeholder="Enter email"  
+                      name="email" 
+                      ref = { email => this.email = email }
+                      required/>
                     </div>
                     <div className="form-group">
                       <label >Phone Number:</label>
-                      <input type="tel" className="form-control" id="pwd" placeholder="Enter phone number"  onChange={this.inputChange.bind(self, 'phone')} name="phone"/>
+                      <input type="tel" 
+                      className="form-control" 
+                      id="pwd" 
+                      placeholder="Enter phone number"  
+                      name="phone" 
+                      ref = { phone => this.phone = phone }
+                      required/>
                     </div>
                     <div className="form-group">
                       <label>User Type:</label>
-                      {/* <Select
-                        name="form-field-name"
-                        value='abc'
-                        options={this.state.userTypes}
-                        onChange={(user)=>this.setUserType(user)}
-                        clearable={false}
-                      /> */}
+                      <select ref = { userType => this.userType = userType}>
+                        {userTypes}
+                      </select>
                     </div>
-                    <button type="submit" className="btn btn-default" onClick={this.addUser}>Submit</button>
+                    <button type="submit" className="btn btn-default">Submit</button>
                   </form>
                 </div>
                 <div className="modal-footer">
@@ -110,9 +115,9 @@ export default class CreateUser extends React.Component {
       </div>
     );
   }
-  componentDidMount(){
-    setTimeout(()=>{
-      console.log("yess");
-    },1000);
-  }
 }
+
+
+const mapStateToProps = state => ({ userState: state.userReducer });
+const mapDispatchToProps = dispatch => ({ createuser_Actions: bindActionCreators(userActions, dispatch) });
+export default connect(mapStateToProps, mapDispatchToProps)(CreateUser);

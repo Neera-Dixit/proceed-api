@@ -1,7 +1,10 @@
 const project = {
 	identity: 'projectDetails',
 	migrate: 'safe',
-  	connection: 'mongoDB'
+  connection: 'mongoDB',
+  createdBy: {
+    model: 'user_aes'
+  }
 };
 
 export default project;

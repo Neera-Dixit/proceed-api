@@ -12,7 +12,7 @@ const generatePassword = ({newUserType:userType}) => {
 const userController = {
 
   createUser: (request, response) => {
-    const { parentUserType, newUserType, name, emailID, contactNum } = request.payload;
+    const { newUserType, name, emailID, contactNum } = request.payload;
     const _modelName = Util.getModelNameFromUserID(newUserType);
     const _User = request.collections(true)[_modelName];
 

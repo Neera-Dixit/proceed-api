@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
+import BrowserRouter from 'react-router-dom/BrowserRouter';
 import { Provider } from 'react-redux';
 import { routerReducer } from 'react-router-redux';
 import createSagaMiddleware from 'redux-saga';
@@ -9,27 +10,17 @@ import rootReducers from './root_reducer';
 import App from './App';
 import { AppContainer } from 'react-hot-loader';
 import logger from 'redux-logger';
+import store from './redux/appStore';
 
 if (module.hot) module.hot.accept();
 
-const sagaMiddleware = createSagaMiddleware();
-
-const store = createStore(
-  rootReducers,
-  applyMiddleware(sagaMiddleware, logger)
-);
-
-let sagaTask = sagaMiddleware.run(function* () {
-  yield RootSaga();
-});
-
 // and react will render the whole stuff into the div with hot module stuff
 ReactDOM.render(
-  <AppContainer>
     <Provider store={store}>
-      <App/>
-    </Provider>
-  </AppContainer>,
+      <BrowserRouter>
+       <App/>
+      </BrowserRouter>
+    </Provider>,
   document.getElementById('app')
 );
 

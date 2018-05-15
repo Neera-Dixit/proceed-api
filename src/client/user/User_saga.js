@@ -1,21 +1,26 @@
-import {delay} from 'redux-saga';
-import {call, put, takeEvery, select, all, take, fork, takeLatest} from 'redux-saga/effects';
+import { delay } from 'redux-saga';
+import { takeLatest, put, call } from 'redux-saga/effects';
 import ACTION from '../common/action_constants.js';
-// import {GetData, PostData} from '../../utils/ajax';
-import Api from '../common/api_config';
+import HTTPClient from '../utils/httpclient';
+import APIConfig from '../common/api_config';
+import AppUtil from '../common/appUtils'
+import userActions from './user_actions';
 
+function* createUserHandler({payload:createUserPayload}) {
+  debugger;
+  let { HTTPMethod, url } = APIConfig.createUser;
 
-function* user(action) {
-        try{        
-            // yield put({type : ACTION.LOADER.SHOW_LOADER});
-            const userInfo = yield call(PostData, Api.createUser, action.data);        
-        }
-        catch(e){
-            console.error(e);
-        }
+  const token = AppUtil.getHeaderTokenValue();
+  const headers = {'Authorization': "bearer " + token};
 
-		// yield put({type : ACTION.LOADER.HIDE_LOADER});
-		// yield put({type : ACTION.LOADER.HIDE_LOADER});
-	
+  try {
+  const { data } = yield HTTPClient[HTTPMethod]({ url, headers, body: createUserPayload });
+  yield put(userActions.userCreationSuccess(data.message));
+  } catch (error) {
+  console.log(error);
+  }
 }
-export {user};
+
+export default function* userSaga() {
+ yield takeLatest(ACTION.USER.CREATEUSER,createUserHandler);
+}

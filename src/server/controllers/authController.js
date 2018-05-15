@@ -2,6 +2,7 @@ import Util from '../config/util';
 
 const authController = {
   validateUser: (request, response) => {
+    console.log("entered !!!!!!!!!!!!!!!!!!!");
     const { userID, password } = request.payload;
 
     const _modelName = Util.getModelNameFromUserID(userID);

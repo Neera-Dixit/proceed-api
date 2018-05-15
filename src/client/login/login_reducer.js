@@ -1,11 +1,22 @@
 import ACTION from '../common/action_constants';
 
-function about(state = {},action){
-  let tempState = Object.assign({}, state);
-  if(action.type === ACTION.ABOUT.LOADABOUT) {
-    tempState.load = true;
-    return tempState;
+function loginReducer(state = {},action){
+  switch(action.type) {
+    case ACTION.ABOUT.LOADABOUT: {
+      tempState.load = true;
+      return newState;
+    }
+
+    case ACTION.USER.AUTHUSERSUCCESS: {
+      return {...state, loginStatus: 'success', loginstatusData: action.payload.data};
+      return newState;
+    }
+
+    case ACTION.USER.AUTHUSERFAILURE: {
+      return {...state, loginStatus: 'failure', loginstatusData: `${action.payload}`};
+    }
+
+    default : return state;
   }
-  return state;
 }
-export default about;
+export default loginReducer;

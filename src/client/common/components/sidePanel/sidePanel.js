@@ -11,6 +11,9 @@ class SidePanel extends React.Component {
     }
 
     render() {
+      const {projectList} = this.props;
+      const projlistMap = projectList && projectList.map(project => <div className="menu-item" key={project.id}>{project.name}</div>)
+
         return (
             <div className="side-bar-root">
                 <div className="menu">
@@ -19,8 +22,7 @@ class SidePanel extends React.Component {
                 </div>
                 <div>
                     <div className="menu-item">My Projects</div>
-                    <div className="menu-item">Project Sample1</div>
-                    <div className="menu-item">Project Sample2</div>
+                    { projlistMap ? projlistMap : <label>No Projects</label> }
                 </div>
             </div>
         );

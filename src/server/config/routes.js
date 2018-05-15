@@ -44,7 +44,7 @@ const routes = {
       method: 'POST', path: '/api/createUser',
       config: {
         validate: { 
-          payload: Util.payLoadValidation(['parentUserType', 'newUserType', 'name', 'emailID', 'contactNum' ]),
+          payload: Util.payLoadValidation(['newUserType', 'name', 'emailID', 'contactNum' ]),
           headers: Util.requestHeaderValidation()
         },
         handler: userController.createUser
@@ -83,7 +83,7 @@ const routes = {
         },
         handler: projectController.getProjectDetails
       }
-    } 
+    },
 
     // End of Project Routes
   ]

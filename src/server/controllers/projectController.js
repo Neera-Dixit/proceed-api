@@ -64,6 +64,7 @@ const projectController = {
     if (projectID) {
       projectController.getProjectDetailsByProjectID(request, response, projectID);
     } else if(userID) {
+      console.log("user ID",userID);
       projectController.getProjectDetailsByUserID(request, response, userID);
     } else {
       Util.sendResponse(response, "Project Not Found");
@@ -88,15 +89,16 @@ const projectController = {
     const _query = {
       createdBy: userID
     };
-    
+    console.log("user ID");
     const _Project = request.collections(true)['projectdetails'];
-    _Project.findOne(_query).exec((err, projectData) => {
+    _Project.find(_query).exec((err, projectData) => {
+      console.log("data",projectData);
       if(err || !projectData) {
         return Util.sendResponse(response, `Project with ID ${projID} not found`);
       }
       Util.sendResponse(response, null, projectData);
     });
-  }
+  },
 };
 
 export default projectController;

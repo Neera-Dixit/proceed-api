@@ -49,9 +49,9 @@ const devPlugins = environment => commonPlugins(environment).concat([
   /*nnew JsDocPlugin({
     conf: JSDocPath,
   }), */
-  new BundleAnalyzer.BundleAnalyzerPlugin(),
+  // new BundleAnalyzer.BundleAnalyzerPlugin(),
   new HtmlWebpackHarddiskPlugin(),
-  new WebpackNotifierPlugin({alwaysNotify: true}),
+  // new WebpackNotifierPlugin({alwaysNotify: true}),
 ]);
 
 const prodPlugins = environment => commonPlugins(environment).concat([

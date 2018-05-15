@@ -1,11 +1,18 @@
 import ACTION from '../common/action_constants';
 
-function user(state = {}, action) {
-    let tempState = Object.assign({}, state);
-    if (action.type === ACTION.USER.STOREUSER) {
-        tempState.load = true;
-        return tempState;
+function userReducer(state = {}, action) {
+  switch(action.type) {
+    case ACTION.USER.CREATEUSERSUCCESS: {
+      return { ...state, 
+        userCreation: {
+          status: true,
+          message: action.payload
+        }
+      }
     }
-    return state;
+
+    default : return state;
+  }
 }
-export default user;
+
+export default userReducer;
